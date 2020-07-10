@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -18,10 +20,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        GetRawData getRawData = new GetRawData();
-        getRawData.execute("https://www.flickr.com/services/feeds/photos_public.gne?tags=nokia&format=json&nojsoncallback=1");
-
         Log.d(TAG, "onCreate: ends");
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume: starts");
+        super.onResume();
+
+        GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, "https://www.flickr.com/services/feeds/photos_public.gne\n", "en-us", true);
+        getFlickrJsonData.executeOnSameThread("android, nougat");
+
+        Log.d(TAG, "onResume: ends");
     }
 
     @Override
@@ -35,4 +45,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
+    public void onDataAvailable(List<Photo> photoList, DownloadStatus status){
+        if(status == DownloadStatus.OK){
+            Log.d(TAG, "onDataAvailable: data is " + photoList);
+        }
+        else {
+            Log.e(TAG, "onDataAvailable: failed with status " + status);
+        }
+    }
+
+
 }

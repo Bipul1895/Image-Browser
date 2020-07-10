@@ -1,0 +1,23 @@
+In top 10 downloader app, we performed xml parsing in the onPostExecute() after performing download
+in doInBackground() method. This is generally not how it is done.
+
+The right way is to call one of the methods of MainActivity (the activity which called Async Task)
+and provide the downloaded data to it in the form of a string. This is known as callback.
+We pass an object of MainActivity (using this) to async task and using this object onPostExecute()
+will call ______() method of MainActivity.
+
+super.onPostExecute() does not do anything.
+
+We learnt the concept of callback. The concept is if a class calls another class for some functionality
+that class should do the work and then should callback to the class which called it with the result.
+For this, the second class (called class) should be provided an object of first class (caller class).
+Now the caller class is already initialized and we do not want another instance of it to be created.
+For this, in the field of second class, we have an object of type of first class. This variable
+is initialized in the constructor, so when the first class calls the second class, it provides it
+with an instance of itself using "this" keyword. This relationship in our code is b/w
+GetFlickrJsonData and GetRawData. GetRawData's doInBackground performs the task of downloading
+JSON data and when done, its onPostExecute will call onDownloadComplete() of GetFlickrJsonData. This
+call is called callback. This is the reason GetRawData class has a field of type "GetFlickrJsonData".
+
+Note that parsing of JSON data should also be done on background thread as it is also a time
+consuming process and MainActivity should not wait for it to get completed.

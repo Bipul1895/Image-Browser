@@ -16,15 +16,23 @@ public class GetRawData extends AsyncTask<String, Void, String> {
     private static final String TAG = "GetRawData";
 
     private DownloadStatus downloadStatus;
+    private GetFlickrJsonData callBack;
 
-    public GetRawData() {
+
+    public GetRawData(GetFlickrJsonData callBack) {
         downloadStatus = DownloadStatus.IDLE;
+        this.callBack = callBack;
     }
 
     @Override
     protected void onPostExecute(String s) {
         Log.d(TAG, "onPostExecute: parameter : " + s);
-        super.onPostExecute(s);
+
+        if(callBack != null){
+            callBack.onDownloadComplete(s, downloadStatus);
+        }
+
+        Log.d(TAG, "onPostExecute: ends");
     }
 
     @Override
