@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, "https://www.flickr.com/services/feeds/photos_public.gne\n", "en-us", true);
-        getFlickrJsonData.executeOnSameThread("android, nougat");
+        getFlickrJsonData.execute("android, nougat");
 
         Log.d(TAG, "onResume: ends");
     }

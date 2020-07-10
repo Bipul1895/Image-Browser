@@ -1,17 +1,18 @@
 package org.example.imageviewer;
 
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Looper;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetFlickrJsonData {
+public class GetFlickrJsonData extends AsyncTask<String, Void, List<Photo> > {
     private static final String TAG = "GetFlickrJsonData";
 
     private List<Photo> photoList = null;
@@ -33,6 +34,7 @@ public class GetFlickrJsonData {
 
     }
 
+    /*
     public void executeOnSameThread(String searchCriteria) {
         Log.d(TAG, "executeOnSameThread: starts");
 
@@ -42,6 +44,30 @@ public class GetFlickrJsonData {
         getRawData.execute(destinationUri);
 
         Log.d(TAG, "executeOnSameThread: ends");
+    }
+     */
+
+    @Override
+    protected void onPostExecute(List<Photo> photos) {
+        Log.d(TAG, "onPostExecute: starts");
+
+        if(callBack != null){
+            callBack.onDataAvailable(photoList, DownloadStatus.OK);
+        }
+
+        Log.d(TAG, "onPostExecute: ends");
+    }
+
+    @Override
+    protected List<Photo> doInBackground(String... params) {
+        Log.d(TAG, "doInBackground: starts");
+        String destinationUri = createUri(params[0], lang, matchAll);
+
+        GetRawData getRawData = new GetRawData(this);
+        getRawData.runOnSameThread(destinationUri);
+
+        Log.d(TAG, "doInBackground: ends");
+        return photoList;
     }
 
     private String createUri(String searchCriteria, String lang, boolean matchAll) {
@@ -60,8 +86,18 @@ public class GetFlickrJsonData {
         return uri.toString();
     }
 
+    //It is called from GetRawData's onPostExecute() method because it has callback of this class
+    //It is run on background thread because onPostExecute of GetRawData is running on background
+    //thread
     public void onDownloadComplete(String data, DownloadStatus status) {
         Log.d(TAG, "onDownloadComplete: starts with status " + status);
+
+        if(Looper.myLooper() != Looper.getMainLooper()){
+            Log.d(TAG, "onDownloadComplete: We are on background thread");
+        }
+        else{
+            Log.d(TAG, "onDownloadComplete: We are on main thread");
+        }
 
         if (status == DownloadStatus.OK) {
             photoList = new ArrayList<>();
@@ -95,10 +131,6 @@ public class GetFlickrJsonData {
                 status = DownloadStatus.FAILED;
             }
 
-        }
-
-        if (callBack != null){
-            callBack.onDataAvailable(photoList, status);
         }
 
         Log.d(TAG, "onDownloadComplete: ends");

@@ -1,6 +1,7 @@
 package org.example.imageviewer;
 
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -12,7 +13,7 @@ import java.net.URL;
 
 enum DownloadStatus {IDLE, PROCESSING, NOT_INITIALIZED, FAILED, OK}
 
-public class GetRawData extends AsyncTask<String, Void, String> {
+public class GetRawData {
     private static final String TAG = "GetRawData";
 
     private DownloadStatus downloadStatus;
@@ -24,9 +25,33 @@ public class GetRawData extends AsyncTask<String, Void, String> {
         this.callBack = callBack;
     }
 
-    @Override
-    protected void onPostExecute(String s) {
+    //Called by doInBackground of GetFlickrJsonData
+    //So it is running on background thread
+    //Thus, sendBackToCaller() and downloadJsonData() are also running on background thread
+    void runOnSameThread(String destinationUri) {
+        Log.d(TAG, "runOnSameThread: starts");
+//        if(Looper.myLooper() != Looper.getMainLooper()) {
+//            Log.d(TAG, "runOnSameThread: we are on background thread");
+//        }
+//        else{
+//            Log.d(TAG, "runOnSameThread: we are on main thread");
+//        }
+
+        sendBackToCaller(downloadJsonData(destinationUri));
+
+        Log.d(TAG, "runOnSameThread: ends");
+
+    }
+
+    private void sendBackToCaller(String s) {
         Log.d(TAG, "onPostExecute: parameter : " + s);
+
+//        if(Looper.myLooper() == Looper.getMainLooper()) {
+//            Log.d(TAG, "onPostExecute: We are on main thread");
+//        }
+//        else{
+//            Log.d(TAG, "onPostExecute: we are on background thread");
+//        }
 
         if(callBack != null){
             callBack.onDownloadComplete(s, downloadStatus);
@@ -35,13 +60,20 @@ public class GetRawData extends AsyncTask<String, Void, String> {
         Log.d(TAG, "onPostExecute: ends");
     }
 
-    @Override
-    protected String doInBackground(String... strings) {
+
+    private String downloadJsonData(String uri) {
+
+//        if(Looper.myLooper() != Looper.getMainLooper()) {
+//            Log.d(TAG, "doInBackground: We are on background thread");
+//        }
+//        else{
+//            Log.d(TAG, "doInBackground: we are on main thread");
+//        }
 
         HttpURLConnection connection = null;
         BufferedReader reader = null;
 
-        if(strings == null){
+        if(uri == null){
             downloadStatus = DownloadStatus.NOT_INITIALIZED;
             return null;
         }
@@ -50,7 +82,7 @@ public class GetRawData extends AsyncTask<String, Void, String> {
 
             downloadStatus = DownloadStatus.PROCESSING;
 
-            URL url = new URL(strings[0]);
+            URL url = new URL(uri);
             connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("GET");

@@ -8,6 +8,7 @@ will call ______() method of MainActivity.
 
 super.onPostExecute() does not do anything.
 
+-----------------------------------------------------------------------------------------------
 We learnt the concept of callback. The concept is if a class calls another class for some functionality
 that class should do the work and then should callback to the class which called it with the result.
 For this, the second class (called class) should be provided an object of first class (caller class).
@@ -18,6 +19,32 @@ with an instance of itself using "this" keyword. This relationship in our code i
 GetFlickrJsonData and GetRawData. GetRawData's doInBackground performs the task of downloading
 JSON data and when done, its onPostExecute will call onDownloadComplete() of GetFlickrJsonData. This
 call is called callback. This is the reason GetRawData class has a field of type "GetFlickrJsonData".
+-----------------------------------------------------------------------------------------------
 
 Note that parsing of JSON data should also be done on background thread as it is also a time
 consuming process and MainActivity should not wait for it to get completed.
+
+-----------------------------------------------------------------------------------------------
+Android does not allow us to call doInBackground() method from a doInBackground() method.
+This is because android does not allow a background thread to create another background thread.
+Our GetFlickrJsonData is being performed on background thread, thus it's doInBackground() cannot
+call the execute() method of async task. Actually it makes a lot of sense, because whatever method
+is called by doInBackground method will already be running on background thread only.
+
+Check to see on which thread we are working on : Looper.myLooper() == Looper.getMainLooper()
+                                                 if this returns true then we on the UI thread!
+-----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------
+It is important to realize that background thread automatically cannot communicate to UI thread.
+So if we are using a callback variable in a method that is running on background thread, it
+would not be able to succeed as communication b/w the two threads is not possible.
+
+So onDownloadComplete() method of GetFlickrJsonData class can't use callback variable to call
+onDataAvailabe() method defined in the MainActivity because they are on different threads.
+
+This is why Async Task uses onPostExecute() method, because it is run on the main thread.
+So this callback should be done inside onPostExecute() method.
+-----------------------------------------------------------------------------------------------
+
+
