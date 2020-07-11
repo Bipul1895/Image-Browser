@@ -41,10 +41,11 @@ So if we are using a callback variable in a method that is running on background
 would not be able to succeed as communication b/w the two threads is not possible.
 
 So onDownloadComplete() method of GetFlickrJsonData class can't use callback variable to call
-onDataAvailabe() method defined in the MainActivity because they are on different threads.
+onDataAvailable() method defined in the MainActivity because they are on different threads.
 
 This is why Async Task uses onPostExecute() method, because it is run on the main thread.
 So this callback should be done inside onPostExecute() method.
 -----------------------------------------------------------------------------------------------
 
-
+For layout weight to take effect the corresponding parameter (either width or height) should be made 0dp
+When using list view or recycler view, the height of the supporting layout should be wrap content.
