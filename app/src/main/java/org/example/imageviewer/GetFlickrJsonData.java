@@ -29,8 +29,7 @@ public class GetFlickrJsonData extends AsyncTask<String, Void, List<Photo> > {
         this.lang = lang;
         this.matchAll = matchAll;
 
-        //photoList = new ArrayList<>();
-        //Do not initialize photoList here, we have init it to null during declaration to check for null
+        photoList = new ArrayList<>();
 
     }
 
@@ -100,7 +99,6 @@ public class GetFlickrJsonData extends AsyncTask<String, Void, List<Photo> > {
         }
 
         if (status == DownloadStatus.OK) {
-            photoList = new ArrayList<>();
 
             try {
                 JSONObject jsonData = new JSONObject(data);

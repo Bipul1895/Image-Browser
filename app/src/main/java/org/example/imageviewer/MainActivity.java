@@ -3,17 +3,21 @@ package org.example.imageviewer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    FlickrRecyclerViewAdapter flickrRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,13 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        flickrRecyclerViewAdapter = new FlickrRecyclerViewAdapter(new ArrayList<Photo>(), this);
+
+        recyclerView.setAdapter(flickrRecyclerViewAdapter);
 
         Log.d(TAG, "onCreate: ends");
     }
@@ -50,13 +61,18 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //This method provides list of Photo objects to FlickrRecyclerViewAdapter
     public void onDataAvailable(List<Photo> photoList, DownloadStatus status){
         if(status == DownloadStatus.OK){
             Log.d(TAG, "onDataAvailable: data is " + photoList);
+            //send data to the recycler view adapter
+            flickrRecyclerViewAdapter.loadNewData(photoList);
         }
         else {
             Log.e(TAG, "onDataAvailable: failed with status " + status);
         }
+
+        Log.d(TAG, "onDataAvailable: ends");
     }
 
 

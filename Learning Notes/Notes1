@@ -9,6 +9,7 @@ will call ______() method of MainActivity.
 super.onPostExecute() does not do anything.
 
 -----------------------------------------------------------------------------------------------
+
 We learnt the concept of callback. The concept is if a class calls another class for some functionality
 that class should do the work and then should callback to the class which called it with the result.
 For this, the second class (called class) should be provided an object of first class (caller class).
@@ -19,12 +20,14 @@ with an instance of itself using "this" keyword. This relationship in our code i
 GetFlickrJsonData and GetRawData. GetRawData's doInBackground performs the task of downloading
 JSON data and when done, its onPostExecute will call onDownloadComplete() of GetFlickrJsonData. This
 call is called callback. This is the reason GetRawData class has a field of type "GetFlickrJsonData".
+
 -----------------------------------------------------------------------------------------------
 
 Note that parsing of JSON data should also be done on background thread as it is also a time
 consuming process and MainActivity should not wait for it to get completed.
 
 -----------------------------------------------------------------------------------------------
+
 Android does not allow us to call doInBackground() method from a doInBackground() method.
 This is because android does not allow a background thread to create another background thread.
 Our GetFlickrJsonData is being performed on background thread, thus it's doInBackground() cannot
@@ -33,9 +36,11 @@ is called by doInBackground method will already be running on background thread 
 
 Check to see on which thread we are working on : Looper.myLooper() == Looper.getMainLooper()
                                                  if this returns true then we on the UI thread!
+
 -----------------------------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------------------------
+
 It is important to realize that background thread automatically cannot communicate to UI thread.
 So if we are using a callback variable in a method that is running on background thread, it
 would not be able to succeed as communication b/w the two threads is not possible.
@@ -45,7 +50,34 @@ onDataAvailable() method defined in the MainActivity because they are on differe
 
 This is why Async Task uses onPostExecute() method, because it is run on the main thread.
 So this callback should be done inside onPostExecute() method.
+
 -----------------------------------------------------------------------------------------------
 
 For layout weight to take effect the corresponding parameter (either width or height) should be made 0dp
 When using list view or recycler view, the height of the supporting layout should be wrap content.
+
+-----------------------------------------------------------------------------------------------
+
+To add a dependency for library : File -> Project Structure -> Dependencies -> + -> search for
+library using package name.
+
+-----------------------------------------------------------------------------------------------
+
+Recycler View : Views are encapsulated in View Holder, this saves having to call findViewById() all
+the time to get the actual widgets in the view. Just like list view, Recycler view also recycles
+the created views.
+
+Our recycler adapter is going to do a bit more than that, as the "Photo" objects only contain the
+URL of the thumbnails and not the actual image themselves. So it'll be the job of the adapter
+to fetch the thumbnails as the list is scrolled up and down, the thumbnails are being downloaded
+from Flickr as they are needed. Obviously, download may take time so we are using placeholder()
+method of Picasso library to put a placeholder. Also, Picasso provides us error() method to put a
+placeholder in case download fails somehow.
+
+Note that recycler view using Layout manager to manage request of views. That's why just below
+init of recycler view, we setLayoutManager (new LinearLayoutManager(this)).
+
+The arrayList is being provided to FlickRecyclerViewAdapter in the onDownloadComplete() method of
+MainActivity.
+
+-----------------------------------------------------------------------------------------------
