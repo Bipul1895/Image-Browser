@@ -10,14 +10,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private static final String TAG = "MainActivity";
-    FlickrRecyclerViewAdapter flickrRecyclerViewAdapter;
+    FlickrListViewAdapter flickrListViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ListView listView = findViewById(R.id.list_view);
 
-        flickrRecyclerViewAdapter = new FlickrRecyclerViewAdapter(new ArrayList<Photo>(), this);
+        flickrListViewAdapter = new FlickrListViewAdapter(this, R.layout.recy_view_support, new ArrayList<Photo>());
 
-        recyclerView.setAdapter(flickrRecyclerViewAdapter);
+        listView.setAdapter(flickrListViewAdapter);
+        listView.setOnItemClickListener(this);
 
         Log.d(TAG, "onCreate: ends");
     }
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         if(status == DownloadStatus.OK){
             Log.d(TAG, "onDataAvailable: data is " + photoList);
             //send data to the recycler view adapter
-            flickrRecyclerViewAdapter.loadNewData(photoList);
+            flickrListViewAdapter.loadNewData(photoList);
         }
         else {
             Log.e(TAG, "onDataAvailable: failed with status " + status);
@@ -76,4 +80,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Toast.makeText(this, "Clicked : " + i, Toast.LENGTH_SHORT).show();
+    }
 }
