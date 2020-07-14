@@ -6,7 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +20,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private static final String TAG = "MainActivity";
     FlickrListViewAdapter flickrListViewAdapter;
@@ -29,8 +31,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        activateToolbar(false);
 
         ListView listView = findViewById(R.id.list_view);
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         listView.setAdapter(flickrListViewAdapter);
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
 
         Log.d(TAG, "onCreate: ends");
     }
@@ -82,6 +84,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(this, "Clicked : " + i, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onItemClick: starts");
+        Toast.makeText(this, "Simple Click : " + i, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Log.d(TAG, "onItemLongClick: starts");
+//        Toast.makeText(this, "Long Click : " + i, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, PhotoDetailActivity.class);
+        intent.putExtra(PHOTO_TRANSFER, flickrListViewAdapter.getPhoto(i));
+        //We can pass primitive types easily using putExtra
+        //Passing complex object using putExtra is also possible but the object should meet one
+        //condition, it should be Serializable
+        //For this the object must implement Serializable interface
+        startActivity(intent);
+
+        return true;
+        //return false will call onItemClick() method after calling this method.
     }
 }

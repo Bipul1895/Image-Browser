@@ -36,6 +36,13 @@ public class FlickrListViewAdapter extends ArrayAdapter {
         notifyDataSetChanged();
     }
 
+    //Used in MainActivity to send photo object from MainActivity to
+    //PhotoDetailActivity using intent.putExtra()
+    public Photo getPhoto(int position) {
+        if (photoList != null && photoList.size() > position) return photoList.get(position);
+        return null;
+    }
+
     @Override
     public int getCount() {
         return (photoList!=null) ? photoList.size() : 0;

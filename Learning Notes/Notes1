@@ -81,3 +81,9 @@ The arrayList is being provided to FlickRecyclerViewAdapter in the onDownloadCom
 MainActivity.
 
 -----------------------------------------------------------------------------------------------
+
+We can pass primitive types easily using putExtra.
+Passing complex object using putExtra is also possible but the object should meet one condition,
+it should be Serializable. For this the object must implement Serializable interface.
+
+More info : https://docs.oracle.com/javase/tutorial/jndi/objects/serial.html

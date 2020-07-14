@@ -1,6 +1,8 @@
 package org.example.imageviewer;
 
-public class Photo {
+import java.io.Serializable;
+
+public class Photo implements Serializable {
     private String title;
     private String author;
     private String authorId;
