@@ -94,3 +94,7 @@ intent putExtra key. This class extends AppCompatActivity.
 -----------------------------------------------------------------------------------------------
 
 Support libraries provide a backward compatible version of new features. E.g. : Recycler view.
+To use @string resources : Include Resources object in java :
+
+Resources resources = getResources();
+String title_text = resources.getString(R.string.photo_title_text, photoData.getTitle());
