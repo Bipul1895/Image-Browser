@@ -87,3 +87,6 @@ Passing complex object using putExtra is also possible but the object should mee
 it should be Serializable. For this the object must implement Serializable interface.
 
 More info : https://docs.oracle.com/javase/tutorial/jndi/objects/serial.html
+
+We have implemented a BasicActivity which contains method activateToolbar() and added fields for
+intent putExtra key. This class extends AppCompatActivity.
