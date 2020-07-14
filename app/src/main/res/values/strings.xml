@@ -2,4 +2,6 @@
     <string name="app_name">Image Viewer</string>
     <string name="title_activity_search">Search Activity</string>
     <string name="title_activity_photo_detail">Photo Detail</string>
+    <string name="photo_title_text">Title: %s</string>
+    <string name="photo_tags_text">Tags: %s</string>>
 </resources>

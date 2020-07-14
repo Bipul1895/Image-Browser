@@ -90,3 +90,7 @@ More info : https://docs.oracle.com/javase/tutorial/jndi/objects/serial.html
 
 We have implemented a BasicActivity which contains method activateToolbar() and added fields for
 intent putExtra key. This class extends AppCompatActivity.
+
+-----------------------------------------------------------------------------------------------
+
+Support libraries provide a backward compatible version of new features. E.g. : Recycler view.

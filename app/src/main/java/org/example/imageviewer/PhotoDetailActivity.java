@@ -1,6 +1,7 @@
 package org.example.imageviewer;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,10 +22,12 @@ public class PhotoDetailActivity extends BaseActivity {
 
         if(photoData != null){
             TextView photoTitle = findViewById(R.id.photo_title);
-            photoTitle.setText("Title: " + photoData.getTitle());
+            Resources resources = getResources();
+            String title_text = resources.getString(R.string.photo_title_text, photoData.getTitle());
+            photoTitle.setText(title_text);
 
             TextView photoTags = findViewById(R.id.photo_tags);
-            photoTags.setText("Tags: " + photoData.getTags());
+            photoTags.setText(resources.getString(R.string.photo_tags_text, photoData.getTags()));
 
             TextView photoAuthor = findViewById(R.id.photo_author);
             photoAuthor.setText(photoData.getAuthor());
