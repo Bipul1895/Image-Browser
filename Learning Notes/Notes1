@@ -98,3 +98,21 @@ To use @string resources : Include Resources object in java :
 
 Resources resources = getResources();
 String title_text = resources.getString(R.string.photo_title_text, photoData.getTitle());
+
+Inorder to implement with assistance from android system, your application must provide a search
+configuration in form of an xml file. The file is generally called searchable.xml. The file is
+generally created in xml directory which is not present by default.
+
+Then in manifest.xml file, under the activity which implements the search, link this searchable.xml
+with SearchActivity. Also, we have to add "intent filter" and "meta data".
+For details : https://developer.android.com/guide/topics/search/search-dialog
+
+To implement search in your SearchActivity, read this documentation :
+https://developer.android.com/reference/android/widget/SearchView.OnQueryTextListener
+
+SearchView.OnQueryTextListener interface has to  be implemented.
+
+Within that we have to override : onQueryTextSubmit() method.
+
+Shared Preferences can retrieve the last input value even if the app is destroyed, kind of similar
+to a database.

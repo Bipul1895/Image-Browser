@@ -3,6 +3,7 @@ package org.example.imageviewer;
 import androidx.annotation.NonNull;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +19,8 @@ import java.util.List;
 public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private static final String TAG = "MainActivity";
+    private static final String MY_PREF_NAME = "MainActivity";
+
     FlickrListViewAdapter flickrListViewAdapter;
 
     @Override
@@ -44,8 +47,14 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         Log.d(TAG, "onResume: starts");
         super.onResume();
 
-        GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, "https://www.flickr.com/services/feeds/photos_public.gne\n", "en-us", true);
-        getFlickrJsonData.execute("android, nougat");
+        SharedPreferences sharedPreferences = getSharedPreferences(SearchActivity.MY_PREF_NAME, MODE_PRIVATE);
+        String query = sharedPreferences.getString(FLICKR_QUERY, "");
+        //in case there is no string in shared Pref, we will get back "", which is the 2nd param
+
+        if(query.length() != 0) {
+            GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData(this, "https://www.flickr.com/services/feeds/photos_public.gne\n", "en-us", true);
+            getFlickrJsonData.execute(query);
+        }
 
         Log.d(TAG, "onResume: ends");
     }
@@ -59,6 +68,13 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.action_search){
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -86,7 +102,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         Log.d(TAG, "onItemLongClick: starts");
-//        Toast.makeText(this, "Long Click : " + i, Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, PhotoDetailActivity.class);
         intent.putExtra(PHOTO_TRANSFER, flickrListViewAdapter.getPhoto(i));
