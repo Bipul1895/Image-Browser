@@ -7,6 +7,8 @@ Parsed JSON data (also in background thread). Displayed data in list view using 
 Used Picasso library for displaying image in image view.
 When an item on list view is clicked, an activity providing photo details opens up.
 Handled click by implementing OnItemClickListener interface.
-Provided search functionality. Flickr provides "tags" for searching images. 
+Provided search functionality. Flickr provides "tags" for searching images.
+Search interface is implemented using Seach view. 
+Details : https://developer.android.com/guide/topics/search/search-dialog#ReceivingTheQuery
 The search query provided by user modifies the original Flickr URL and thus fetches the requested data.
 Used Shared Preferences to share data (search query) between two activities.
