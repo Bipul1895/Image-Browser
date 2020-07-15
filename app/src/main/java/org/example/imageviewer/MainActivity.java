@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         activateToolbar(false);
 
         ListView listView = findViewById(R.id.list_view);
+        TextView emptyTv = findViewById(R.id.empty_tv);
+        listView.setEmptyView(emptyTv);
 
         flickrListViewAdapter = new FlickrListViewAdapter(this, R.layout.recy_view_support, new ArrayList<Photo>());
 

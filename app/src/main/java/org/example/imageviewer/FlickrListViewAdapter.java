@@ -1,6 +1,7 @@
 package org.example.imageviewer;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class FlickrListViewAdapter extends ArrayAdapter {
+
+    private static final String TAG = "FlickrListViewAdapter";
 
     private List<Photo> photoList;
     private Context context;
@@ -51,13 +54,14 @@ public class FlickrListViewAdapter extends ArrayAdapter {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
+        Log.d(TAG, "getView: starts");
         if (convertView == null){
             convertView = layoutInflater.inflate(layoutResource, parent, false);
         }
 
         ImageView thumbnail = convertView.findViewById(R.id.thumbnail);
         TextView title = convertView.findViewById(R.id.title);
+
 
         Photo currentPhoto = photoList.get(position);
 
@@ -68,6 +72,7 @@ public class FlickrListViewAdapter extends ArrayAdapter {
 
         title.setText(currentPhoto.getTitle());
 
+        Log.d(TAG, "getView: ends");
         return convertView;
     }
 }
